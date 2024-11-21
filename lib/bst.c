@@ -49,11 +49,12 @@ void BST_remove(BSTNODE* root, int val) {
     BSTNODE* ptr = root;
     BSTNODE* prev = NULL;
     while(root != NULL) {
-        prev = root;
-        if(val > root->val) {
-            root = root->right;
-        } else if (val < root->val) {
-            root = root->left;
+        if(val > ptr->val) {
+            prev = ptr;
+            ptr = ptr->right;
+        } else if (val < ptr->val) {
+            prev = ptr;
+            ptr = ptr->left;
         } else {
             // found
             
@@ -61,12 +62,12 @@ void BST_remove(BSTNODE* root, int val) {
             if(ptr->left != NULL && ptr->right != NULL) {
                 // left tree
                 int replaceVal = BST_max(ptr->left);
-                BST_remove(root, replaceVal);
+                BST_remove(ptr->left, replaceVal);
                 root->val = replaceVal;
                 
             } else if (ptr->left == NULL && ptr->right == NULL) {
                 // no children
-                if(prev->right == root) {
+                if(prev->right == ptr) {
                     prev->right = NULL;
                 } else {
                     prev->left = NULL;
@@ -85,6 +86,7 @@ void BST_remove(BSTNODE* root, int val) {
                     prev->left = ptr_child;
                 }
             }
+            return;
 
         }
     }
@@ -95,12 +97,12 @@ void BST_remove(BSTNODE* root, int val) {
 int BST_search(BSTNODE* root, int val) {
     BSTNODE* ptr = root;
     BSTNODE* prev = NULL;
-    while(root != NULL) {
-        prev = root;
-        if(val > root->val) {
-            root = root->right;
-        } else if (val < root->val) {
-            root = root->left;
+    while(ptr != NULL) {
+        prev = ptr;
+        if(val > ptr->val) {
+            ptr = ptr->right;
+        } else if (val < ptr->val) {
+            ptr = ptr->left;
         } else {
             return 1;
         }
@@ -128,6 +130,34 @@ int BST_max(BSTNODE* root) {
     return maxSeen;
 }
 
+// ROOT, LEFT, RIGHT
+void BST_preorder(BSTNODE* root) {
+    if(root == NULL) {
+        return;
+    }
+    printf("%d\n", root->val);
+    BST_preorder(root->left);
+    BST_preorder(root->right);
+}
+
+void BST_inorder(BSTNODE* root) {
+    if(root == NULL) {
+        return;
+    }
+    BST_inorder(root->left);
+    printf("%d\n", root->val);
+    BST_inorder(root->right);
+}
+
+void BST_postorder(BSTNODE* root) {
+    if(root == NULL) {
+        return;
+    }
+    BST_postorder(root->left);
+    BST_postorder(root->right);
+    printf("%d\n", root->val);
+}
+
 int main() {
     BSTNODE* root = createBST(10);
     BST_insert(root, 5);
@@ -142,8 +172,16 @@ int main() {
     printf("Search 7: %d\n", BST_search(root, 7));
     printf("Search 20: %d\n", BST_search(root, 20));
 
-    BST_remove(root, 15);
-    printf("Search 15: %d\n", BST_search(root, 15));
+    BST_remove(root, 10);
+    BST_remove(root, 5);
+    printf("Search 10: %d\n", BST_search(root, 10));
+
+    BST_preorder(root);
+    printf("\n");
+    BST_inorder(root);
+    printf("\n");
+    BST_postorder(root);
+    printf("\n");
 
     return 0;
 }

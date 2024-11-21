@@ -15,6 +15,12 @@ int BST_min(BSTNODE* root);
 
 int BST_max(BSTNODE* root);
 
+void BST_preorder(BSTNODE* root);
+
+void BST_inorder(BSTNODE* root);
+
+void BST_postorder(BSTNODE* root);
+
 // find next min / max aka its parent
 
 #endif
